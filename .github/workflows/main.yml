@@ -23,40 +23,25 @@ jobs:
       actions: write
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-          
+
       - name: Install dependencies for Restful Booker
         if: github.event_name == 'push' || github.event.inputs.project == 'restful-booker'
         working-directory: ./Restful-Booker
         run: |
-          npm install
-          sudo npm install -g playwright
-          
+          npm ci
+          npx playwright install --with-deps
+
       - name: Run Playwright tests for Restful Booker
         if: github.event_name == 'push' || github.event.inputs.project == 'restful-booker'
         working-directory: ./Restful-Booker
         run: |
-          sudo npx playwright install --with-deps
           npx playwright test
-          
-      - name: Install dependencies for Sauce Demo
-        if: github.event_name == 'push' || github.event.inputs.project == 'sauce-demo'
-        working-directory: ./Sauce-Demo
-        run: |
-          npm install
-          sudo npm install -g playwright
-        
-      - name: Run Playwright tests for Sauce Demo
-        if: github.event_name == 'push' || github.event.inputs.project == 'sauce-demo'
-        working-directory: ./Sauce-Demo
-        run: |
-          sudo npx playwright install --with-deps
-          npx playwright test
-          
+
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4

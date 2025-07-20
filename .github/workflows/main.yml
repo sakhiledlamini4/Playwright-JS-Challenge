@@ -19,6 +19,9 @@ jobs:
   run-project-workflow:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Determine Project to Run
         id: project
         run: |

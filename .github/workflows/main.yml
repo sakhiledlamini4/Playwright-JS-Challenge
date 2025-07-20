@@ -20,13 +20,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Call Restful Booker Workflow
-        uses: ./.github/workflows/restful-booker.yml
+        uses: Restful Booker/.github/workflows/restful-booker.yml
 
   run-sauce-demo-tests:
     runs-on: ubuntu-latest
     steps:
       - name: Call Sauce Demo Workflow
-        uses: ./.github/workflows/sauce-demo.yml
+        uses: Sauce Demo/.github/workflows/sauce-demo.yml
 
   run-project-workflow:
     if: github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request'
@@ -42,7 +42,7 @@ jobs:
           echo "::set-output name=project::${{ github.event.inputs.project }}"
       - name: Call Restful Booker Workflow
         if: steps.project.outputs.project == 'restful-booker'
-        uses: ./.github/workflows/restful-booker.yml
+        uses: Restful Booker/.github/workflows/restful-booker.yml
       - name: Call Sauce Demo Workflow
         if: steps.project.outputs.project == 'sauce-demo'
-        uses: ./.github/workflows/sauce-demo.yml
+        uses: Sauce Demo/.github/workflows/sauce-demo.yml

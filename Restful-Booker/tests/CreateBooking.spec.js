@@ -6,8 +6,7 @@ function loadTestData(filename) {
   return JSON.parse(fs.readFileSync(path.join(__dirname, '../test-data', filename), 'utf8'));
 }
 
-test.describe('Restful Booker test suite', () => {
-  test('should create a booking and receive booking details back', async ({ request }) => {
+test('should create a booking and receive booking details back', async ({ request }) => {
     const bookingData = loadTestData('booking.json');
     const response = await request.post('https://restful-booker.herokuapp.com/booking', {
       data: bookingData,
@@ -21,5 +20,4 @@ test.describe('Restful Booker test suite', () => {
     expect(body).toHaveProperty('bookingid');
     expect(body).toHaveProperty('booking');
     expect(body.booking).toEqual(bookingData);
-  });                       
-});                                   
+  });                                  

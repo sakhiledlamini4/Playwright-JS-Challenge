@@ -1,7 +1,6 @@
 const { test, expect } = require('@playwright/test');
 
-test.describe('Restful Booker test suite', () => {
-  test('should delete a booking successfully', async ({ request }) => {
+test('should delete a booking successfully', async ({ request }) => {
     // Create a token (authentication)
     const authResponse = await request.post('https://restful-booker.herokuapp.com/auth', {
       data: {
@@ -52,4 +51,3 @@ test.describe('Restful Booker test suite', () => {
     const getDeletedBooking = await request.get(`https://restful-booker.herokuapp.com/booking/${bookingid}`);
     expect(getDeletedBooking.status()).toBe(404);
   });
-});

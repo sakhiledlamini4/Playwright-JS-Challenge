@@ -1,7 +1,6 @@
 const { test, expect } = require('@playwright/test');
 
-test.describe('Restful Booker test suite', () => {
-  test('should request booking data by booking id and receive booking info', async ({ request }) => {
+test('should request booking data by booking id and receive booking info', async ({ request }) => {
     const response = await request.get('https://restful-booker.herokuapp.com/booking/2', {
       headers: {
         'Accept': 'application/json'
@@ -18,4 +17,3 @@ test.describe('Restful Booker test suite', () => {
     expect(body.bookingdates).toHaveProperty('checkin');
     expect(body.bookingdates).toHaveProperty('checkout');
   });
-});

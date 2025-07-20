@@ -6,8 +6,7 @@ function loadTestData(filename) {
   return JSON.parse(fs.readFileSync(path.join(__dirname, '../test-data', filename), 'utf8'));
 }
 
-test.describe('Restful Booker test suite', () => {
-  test('Should login , create booking and partially update details', async ({ request }) => {
+test('Should login , create booking and partially update details', async ({ request }) => {
     const authData = loadTestData('auth.json');
     const bookingData = loadTestData('booking.json');
     const partialUpdateData = { firstname: 'James', lastname: 'Brown' };
@@ -52,4 +51,3 @@ test.describe('Restful Booker test suite', () => {
       ...partialUpdateData
     });
   });
-});

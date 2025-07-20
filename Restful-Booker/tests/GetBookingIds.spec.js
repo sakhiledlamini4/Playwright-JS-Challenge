@@ -7,8 +7,7 @@ function loadTestData(filename) {
 }
 
 // Get all existing booking ids
-test.describe('Restful Booker test suite', () => {
-  test('should request all existing booking ids and receive a list of ids', async ({ request }) => {
+test('should request all existing booking ids and receive a list of ids', async ({ request }) => {
     const response = await request.get('https://restful-booker.herokuapp.com/booking');
     
     expect(response.status()).toBe(200);
@@ -54,4 +53,3 @@ test.describe('Restful Booker test suite', () => {
       expect(typeof item.bookingid).toBe('number');
     });
   });
-});

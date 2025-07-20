@@ -8,5 +8,5 @@ module.exports = defineConfig({
     viewport: { width: 1280, height: 720 },
     ignoreHTTPSErrors: true,
   },
-    reporter: [['list'], ['monocart-reporter', { name: 'Restful Booker', outputFile: './monocart-report/index.html' }]],
+    reporter: [['list'], ['monocart-reporter', { name: 'Restful Booker Tests', outputFile: './monocart-report/index.html' }]],
 });

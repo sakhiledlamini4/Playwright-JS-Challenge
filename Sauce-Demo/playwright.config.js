@@ -8,5 +8,5 @@ module.exports = defineConfig({
     viewport: { width: 1280, height: 720 },
     ignoreHTTPSErrors: true,
   },
-    reporter: [['list'], ['monocart-reporter', { name: 'Sauce Demo', outputFile: './monocart-report/index.html' }]],
+    reporter: [['list'], ['monocart-reporter', { name: 'Sauce Demo Tests', outputFile: './monocart-report/index.html' }]],
 });

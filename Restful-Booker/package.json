@@ -14,5 +14,8 @@
   "type": "commonjs",
   "dependencies": {
     "@playwright/test": "^1.54.1"
+  },
+  "devDependencies": {
+    "monocart-reporter": "^2.9.21"
   }
 }

@@ -1,7 +1,7 @@
 name: Restful Booker CI
 
 on:
-  workflow_call:  # Make it a reusable workflow
+  workflow_call:
 
 jobs:
   build:
@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          path: Restful Booker # Check out into the project directory
+          path: Restful-Booker
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -17,28 +17,24 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
-        run: |
-          cd Restful Booker
-          npm install
+        working-directory: ./Restful-Booker
+        run: npm install
 
       - name: Run Playwright install
-        run: |
-          cd Restful Booker
-          npx playwright install --with-deps
+        working-directory: ./Restful-Booker
+        run: npx playwright install --with-deps
 
       - name: Run tests
-        run: |
-          cd Restful Booker
-          npx playwright test
+        working-directory: ./Restful-Booker
+        run: npx playwright test
 
       - name: Generate Playwright report
-        run: |
-          cd Restful Booker
-          npx playwright show-report
+        working-directory: ./Restful-Booker
+        run: npx playwright show-report
 
       - name: Upload Playwright report
         uses: actions/upload-artifact@v3
         with:
           name: playwright-report-restful-booker
-          path: Restful Booker/playwright-report/
+          path: Restful-Booker/playwright-report/
           retention-days: 30

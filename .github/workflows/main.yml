@@ -17,10 +17,10 @@ on:
 
 jobs:
   run-restful-booker-tests:
-    uses: Restful Booker/.github/workflows/restful-booker.yml@main
+    uses: ./Restful Booker/.github/workflows/restful-booker.yml@main
 
   run-sauce-demo-tests:
-    uses: Sauce Demo/.github/workflows/sauce-demo.yml@main
+    uses: ./Sauce Demo/.github/workflows/sauce-demo.yml@main
 
   run-project-workflow:
     if: github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request'
@@ -40,9 +40,9 @@ jobs:
   run-restful-booker-dispatch:
     if: needs.run-project-workflow.outputs.project == 'restful-booker'
     needs: run-project-workflow
-    uses: Restful Booker/.github/workflows/restful-booker.yml@main
+    uses: ./Restful Booker/.github/workflows/restful-booker.yml@main
 
   run-sauce-demo-dispatch:
     if: needs.run-project-workflow.outputs.project == 'sauce-demo'
     needs: run-project-workflow
-    uses: Sauce Demo/.github/workflows/sauce-demo.yml@main
+    uses: ./Sauce Demo/.github/workflows/sauce-demo.yml@main

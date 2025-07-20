@@ -65,10 +65,10 @@ jobs:
         run: |
           npx playwright test
 
-      - name: Upload test results for Sauce Demo
+      - name: Upload Monocart Report for Sauce Demo
         if: always() && (github.event_name == 'push' || github.event.inputs.project == 'sauce-demo')
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report-sauce-demo
-          path: ./Sauce-Demo/playwright-report/
+          name: monocart-report-sauce-demo
+          path: ./Sauce-Demo/monocart-report/
           retention-days: 30

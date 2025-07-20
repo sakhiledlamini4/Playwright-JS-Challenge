@@ -1,27 +1,91 @@
-# Test Automation Playwright JS Challenge Project Guide
+# 🧪 Test Automation Playwright JS Challenge Project Guide
 
-This project is set up for browser automation testing using [Playwright](https://playwright.dev/).
+This project contains automated tests for two different web applications using [Playwright](https://playwright.dev/) and [Monocart Reporter](https://www.npmjs.com/package/monocart-reporter):
 
-## Getting Started
+- **Restful Booker** – API-level tests for booking scenarios  
+- **Sauce Demo** – UI automation tests for an e-commerce demo app
 
-1. **Install dependencies:**
+---
+
+## 🚀 Getting Started
+
+### 1. **Clone the repository**
+```sh
+git clone https://github.com/sakhiledlamini4/Playwright-JS-Challenge.git
+cd Playwright-JS-Challenge
+```
+
+2. **Install dependencies:**
+
+Install dependencies in each project folder:
    ```sh
+   cd Restful-Booker
+   npm install
+
+   cd ../Sauce-Demo
    npm install
    ```
-   Note: Dependencies to be installed on both Restful Booker and Sauce Demo.
+   Note: Each project is isolated and has its own package.json and configuration.
 
-2. **Run tests:**
+3. **🧪 Running Tests**
+
+✅ Restful Booker
    ```sh
-   npm test
+   cd Restful-Booker
+   npx playwright test
    ```
-   Note: Tests are ran on respective folders.
+✅ Sauce Demo
+   ```sh
+   cd Sauce-Demo
+   npx playwright test
+   ```
+4. **📊 Viewing the Monocart Test Report**
+After tests run, Monocart generates an HTML report:
+   ```sh
+   npx monocart show-report monocart-report/index.html
+   ```
+Or simply open monocart-report/index.html in your browser.
 
-## Project Structure
-- `tests/` - Contains your Playwright test files (e.g., `example.spec.js`).
-- `playwright.config.js` - Playwright configuration file.
+## 📁 Project Structure
+   ```sh
+   repo-root/
+├── Restful-Booker/
+│   ├── tests/                # Playwright API tests
+│   ├── test-data/            # JSON test payloads (e.g., booking.json)
+│   ├── monocart-report/      # HTML test report (generated after tests run)
+│   ├── playwright.config.js  # Playwright config with Monocart reporter
+│   └── package.json
+│
+├── Sauce-Demo/
+│   ├── tests/       # UI test scripts
+         └── Authentication
+         └── Checkout Process
+         └── Inventory Management
+         └── Shopping Cart         
+│   ├── monocart-report/      # Test report for Sauce Demo
+│   ├── playwright.config.js
+│   └── package.json
+│
+└── .github/
+    └── workflows/
+        └── main.yml          # GitHub Actions CI/CD workflow
+```
 
 ## Useful Commands
-- `npx playwright test` - Run all tests.
-- `npx monocart show-report monocart-report/index.html` - View the HTML Monocart test report after running tests.
+- `npx playwright install` - Install required Playwright browsers
 
-For more information, see the [Playwright documentation](https://playwright.dev/docs/intro).
+## 🛠️ CI/CD Integration
+GitHub Actions is set up to:
+
+- Automatically install dependencies
+
+- Run tests for either project (selectable via workflow dispatch)
+
+- Upload HTML reports as artifacts
+
+- You can trigger CI manually or via push/pull_request to main.
+
+## 📚 Resources
+For more information, see the 
+- [Playwright Documentation](https://playwright.dev/docs/intro).
+- [Monocart Reporter](https://www.npmjs.com/package/monocart-reporter).

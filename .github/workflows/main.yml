@@ -16,10 +16,46 @@ on:
           - sauce-demo
 
 jobs:
-  run-restful-booker-tests:
-    if: github.event_name == 'push' || github.event.inputs.project == 'restful-booker'
-    uses: ./.github/workflows/restful-booker.yml
-
-  run-sauce-demo-tests:
-    if: github.event_name == 'push' || github.event.inputs.project == 'sauce-demo'
-    uses: ./.github/workflows/sauce-demo.yml
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Install dependencies for Restful Booker
+        if: github.event_name == 'push' || github.event.inputs.project == 'restful-booker'
+        working-directory: ./Restful-Booker
+        run: npm install
+        
+      - name: Run Playwright tests for Restful Booker
+        if: github.event_name == 'push' || github.event.inputs.project == 'restful-booker'
+        working-directory: ./Restful-Booker
+        run: |
+          npx playwright install --with-deps
+          npx playwright test
+          
+      - name: Install dependencies for Sauce Demo
+        if: github.event_name == 'push' || github.event.inputs.project == 'sauce-demo'
+        working-directory: ./Sauce-Demo
+        run: npm install
+        
+      - name: Run Playwright tests for Sauce Demo
+        if: github.event_name == 'push' || github.event.inputs.project == 'sauce-demo'
+        working-directory: ./Sauce-Demo
+        run: |
+          npx playwright install --with-deps
+          npx playwright test
+          
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: playwright-report
+          path: |
+            ./Restful-Booker/playwright-report/
+            ./Sauce-Demo/playwright-report/
+          retention-days: 30

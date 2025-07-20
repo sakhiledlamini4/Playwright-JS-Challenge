@@ -1,4 +1,4 @@
-# Restful Booker Test Project Guide
+# Test Automation Playwright JS Challenge Project Guide
 
 This project is set up for browser automation testing using [Playwright](https://playwright.dev/).
 
@@ -8,10 +8,13 @@ This project is set up for browser automation testing using [Playwright](https:/
    ```sh
    npm install
    ```
+   Note: Dependencies to be installed on both Restful Booker and Sauce Demo.
+
 2. **Run tests:**
    ```sh
    npm test
    ```
+   Note: Tests are ran on respective folders.
 
 ## Project Structure
 - `tests/` - Contains your Playwright test files (e.g., `example.spec.js`).

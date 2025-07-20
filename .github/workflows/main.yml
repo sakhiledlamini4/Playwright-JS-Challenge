@@ -18,8 +18,8 @@ on:
 jobs:
   run-restful-booker-tests:
     if: github.event_name == 'push' || github.event.inputs.project == 'restful-booker'
-    uses: ./.github/workflows/restful-booker.yml@main
+    uses: ./.github/workflows/restful-booker.yml
 
   run-sauce-demo-tests:
     if: github.event_name == 'push' || github.event.inputs.project == 'sauce-demo'
-    uses: ./.github/workflows/sauce-demo.yml@main
+    uses: ./.github/workflows/sauce-demo.yml

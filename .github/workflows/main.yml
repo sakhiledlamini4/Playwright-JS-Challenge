@@ -1,0 +1,44 @@
+name: Multi-Project CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+    inputs:
+      project:
+        description: 'Project to run'
+        required: true
+        type: choice
+        options:
+          - restful-booker
+          - sauce-demo
+
+jobs:
+  run-project-workflow:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Determine Project to Run
+        id: project
+        run: |
+          if [[ github.event_name == 'workflow_dispatch' ]]; then
+            echo "::set-output name=project::${{ github.event.inputs.project }}"
+          else
+            CHANGED_FILES=$(git diff --name-only HEAD^ HEAD)
+            if [[ "$CHANGED_FILES" == *'Restful Booker/'* ]]; then
+              echo "::set-output name=project::restful-booker"
+            elif [[ "$CHANGED_FILES" == *'Sauce Demo/'* ]]; then
+              echo "::set-output name=project::sauce-demo"
+            else
+              echo "::set-output name=project::none"
+            fi
+          fi
+
+      - name: Call Restful Booker Workflow
+        if: steps.project.outputs.project == 'restful-booker'
+        uses: ./.github/workflows/restful-booker.yml
+
+      - name: Call Sauce Demo Workflow
+        if: steps.project.outputs.project == 'sauce-demo'
+        uses: ./.github/workflows/sauce-demo.yml

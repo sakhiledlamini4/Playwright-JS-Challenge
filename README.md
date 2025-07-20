@@ -22,6 +22,6 @@ This project is set up for browser automation testing using [Playwright](https:/
 
 ## Useful Commands
 - `npx playwright test` - Run all tests.
-- `npx playwright show-report` - View the HTML test report after running tests.
+- `npx monocart show-report monocart-report/index.html` - View the HTML Monocart test report after running tests.
 
 For more information, see the [Playwright documentation](https://playwright.dev/docs/intro).

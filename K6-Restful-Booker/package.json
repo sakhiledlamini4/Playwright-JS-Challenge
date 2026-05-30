@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "name": "k6-restful-booker",
     "scripts": {
-        "perf": "k6 run ./k6-tests/booker.js"
+        "perf": "node -e \"import { mkdirSync } from 'fs'; mkdirSync('k6-report', { recursive: true });\" && k6 run ./k6-tests/booker.js"
     },
     "devDependencies": {}
 }

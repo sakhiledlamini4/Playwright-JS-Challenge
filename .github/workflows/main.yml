@@ -73,6 +73,7 @@ jobs:
         if: github.event_name == 'push' || github.event.inputs.project == 'k6-restful-booker'
         working-directory: ./K6-Restful-Booker
         run: |
+          mkdir -p k6-report
           npm run perf
 
       - name: Upload K6 summary report
@@ -80,9 +81,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: k6-summary-report
-          path: |
-            ./K6-Restful-Booker/summary.json
-            ./K6-Restful-Booker/k6-report/report.html
+          path: K6-Restful-Booker/k6-report/report.html
           retention-days: 30
 
       # Sauce-Demo setup and test run

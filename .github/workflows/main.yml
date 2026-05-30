@@ -17,7 +17,7 @@ on:
           - k6-restful-booker
 
 jobs:
-  test:
+  RunTests:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -46,7 +46,7 @@ jobs:
 
       - name: Upload Monocart Report for Restful Booker
         if: always() && (github.event_name == 'push' || github.event.inputs.project == 'restful-booker')
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: monocart-report-restful-booker
           path: ./Restful-Booker/monocart-report/
@@ -78,7 +78,7 @@ jobs:
 
       - name: Upload K6 summary report
         if: always() && (github.event_name == 'push' || github.event.inputs.project == 'k6-restful-booker')
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: k6-summary-report
           path: K6-Restful-Booker/k6-report/report.html
@@ -100,7 +100,7 @@ jobs:
 
       - name: Upload Monocart Report for Sauce Demo
         if: always() && (github.event_name == 'push' || github.event.inputs.project == 'sauce-demo')
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: monocart-report-sauce-demo
           path: ./Sauce-Demo/monocart-report/

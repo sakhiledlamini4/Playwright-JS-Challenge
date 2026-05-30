@@ -1,5 +1,6 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
+import { htmlReport } from 'https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js';
 import config from '../../Restful-Booker/config/config-manager.js';
 import commonFunctions from '../functions/common.js';
 import restfullBookerPaylods from '../../Restful-Booker/test-data/payload-generator.js';
@@ -36,4 +37,10 @@ export default function () {
   }
 
   sleep(1);
+}
+
+export function handleSummary(data) {
+  return {
+    'k6-report/report.html': htmlReport(data),
+  };
 }

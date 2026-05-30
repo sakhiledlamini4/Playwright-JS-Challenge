@@ -74,7 +74,6 @@ jobs:
         working-directory: ./K6-Restful-Booker
         run: |
           npm run perf
-          npm run report
 
       - name: Upload K6 summary report
         if: always() && (github.event_name == 'push' || github.event.inputs.project == 'k6-restful-booker')

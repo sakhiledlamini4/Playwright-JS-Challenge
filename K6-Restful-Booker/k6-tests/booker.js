@@ -1,6 +1,8 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
-import config from '../config/config-manager.js';
+import config from '../../Restful-Booker/config/config-manager.js';
+import commonFunctions from '../functions/common.js';
+import restfullBookerPaylods from '../../Restful-Booker/test-data/payload-generator.js';
 
 export const options = {
   stages: [
@@ -14,19 +16,9 @@ export const options = {
   },
 };
 
-const BASE_URL = config.baseUrl;
-const bookingData = JSON.parse(open('../test-data/booking.json'));
-
 export default function () {
-  //const payload = JSON.stringify(bookingPayload());
-  const params = {
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    }
-  };
-
-  const createRes = http.post(config.baseUrl + config.endpoints.createBooking, JSON.stringify(bookingData), params);
+  const bookingData = JSON.stringify(restfullBookerPaylods.bookingPayload());
+  const createRes = commonFunctions.bookingRequest(bookingData);
   const bookingId = createRes.json().bookingid;
 
   check(createRes, {
@@ -34,7 +26,7 @@ export default function () {
   });
 
   if (bookingId) {
-    const getRes = http.get(`${BASE_URL}/booking/${bookingId}`);
+    const getRes = commonFunctions.getBooking(bookingId);
     check(getRes, {
       'get booking success': (r) => r.status === 200,
     });

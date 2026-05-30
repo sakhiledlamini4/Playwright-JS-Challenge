@@ -11,9 +11,12 @@ export const options = {
     { duration: '15s', target: 0 },
   ],
   thresholds: {
-    http_req_duration: ['p(95)<500'],
+    checks: ['rate>0.95'],
+    http_req_duration: ['p(95)<250'],
     'http_req_failed{type:createBooking}': ['rate<0.01'],
   },
+  discardResponseBodies: false,
+  insecureSkipTLSVerify: true,
 };
 
 export default function () {

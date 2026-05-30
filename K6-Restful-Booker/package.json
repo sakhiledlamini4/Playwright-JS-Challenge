@@ -1,0 +1,7 @@
+{
+    "version": "1.0.0",
+    "name": "k6-restful-booker",
+    "scripts": {
+        "perf": "k6 run ./k6-tests/booker.js"
+    }
+}

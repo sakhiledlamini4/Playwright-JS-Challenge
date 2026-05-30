@@ -39,6 +39,11 @@ Install dependencies in each project folder:
    cd Sauce-Demo
    npx playwright test
    ```
+✅ Restful Booker performance test with k6
+   ```sh
+   cd Restful-Booker
+   k6 run ./k6/booker.js
+   ```
 4. **📊 Viewing the Monocart Test Report**
 After tests run, Monocart generates an HTML report:
    ```sh

@@ -1,15 +1,11 @@
-const { test, expect } = require('@playwright/test');
-const fs = require('fs');
-const path = require('path');
-
-function loadTestData(filename) {
-  return JSON.parse(fs.readFileSync(path.join(__dirname, '../test-data', filename), 'utf8'));
-}
+import { test, expect } from '@playwright/test';
+import commonFunctions from '../functions/common';
+import restfullBookerPaylods from '../test-data/payload-generator';
 
 // Get all existing booking ids
-test('should request all existing booking ids and receive a list of ids', async ({ request }) => {
-    const response = await request.get('https://restful-booker.herokuapp.com/booking');
-    
+test('should request all existing booking ids and receive a list of ids', async () => {
+    const response = await commonFunctions.getAllBookings();
+
     expect(response.status()).toBe(200);
     const body = await response.json();
     expect(Array.isArray(body)).toBe(true);
@@ -22,10 +18,8 @@ test('should request all existing booking ids and receive a list of ids', async 
 
 // Get booking ids by firstname and lastname
   test('should request booking ids by firstname and lastname and receive a list of ids', async ({ request }) => {
-    const userData = loadTestData('getBookingByUserDetails.json');
-    const response = await request.get('https://restful-booker.herokuapp.com/booking', {
-      data: userData
-    });
+    const userData = restfullBookerPaylods.getBookingByUserDetailsPayload('Jane', 'Doe');
+    const response = await commonFunctions.getBookingByUserDetails(userData);
     
     expect(response.status()).toBe(200);
     const body = await response.json();
@@ -38,18 +32,29 @@ test('should request all existing booking ids and receive a list of ids', async 
   });
 
 // Get booking ids by check-in and check-out dates
-  test('should request booking ids by check-in and check-out dates and receive a list of ids', async ({ request }) => {
-    const checkInData = loadTestData('getBookingByCheckInDates.json');
-    const response = await request.get('https://restful-booker.herokuapp.com/booking', {
-      data: checkInData
+  test('should request booking ids by check-in and check-out dates and receive a list of ids', async () => {
+
+    let checkin, checkout;
+    await test.step('Create a booking to ensure there is data for the test', async () => {
+      const bookingData = await restfullBookerPaylods.bookingPayload('Test', 'User');
+      checkin = bookingData.checkin;
+      checkout = bookingData.checkout;
+      const createResponse = await commonFunctions.createBooking(bookingData);
+      expect(createResponse.ok()).toBeTruthy();
     });
     
-    expect(response.status()).toBe(200);
-    const body = await response.json();
-    expect(Array.isArray(body)).toBe(true);
-    expect(body.length).toBeGreaterThan(0);
-    body.forEach(item => {
-      expect(item).toHaveProperty('bookingid');
-      expect(typeof item.bookingid).toBe('number');
+    await test.step('Request booking ids by check-in and check-out dates', async () => {
+      const checkInData = restfullBookerPaylods.getBookingByCheckinDatesPayload(checkin, checkout);
+      const response = await commonFunctions.getBookingByUserDetails(checkInData);
+
+      expect(response.status()).toBe(200);
+      const body = await response.json();
+      expect(Array.isArray(body)).toBe(true);
+      expect(body.length).toBeGreaterThan(0);
+      body.forEach(item => {
+        expect(item).toHaveProperty('bookingid');
+        expect(typeof item.bookingid).toBe('number');
+      });
     });
+    
   });

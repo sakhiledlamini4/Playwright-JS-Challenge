@@ -1,50 +1,35 @@
-const { test, expect } = require('@playwright/test');
-const fs = require('fs');
-const path = require('path');
-
-function loadTestData(filename) {
-  return JSON.parse(fs.readFileSync(path.join(__dirname, '../test-data', filename), 'utf8'));
-}
+import { test, expect } from '@playwright/test';
+import commonFunctions from '../functions/common';
+import restfullBookerPaylods from '../test-data/payload-generator';
 
 test('Should login, create booking and update details', async ({ request }) => {
-  const authData = loadTestData('auth.json');
-  const bookingData = loadTestData('booking.json');
-  const updatedBookingData = loadTestData('updatedBooking.json');
+  
+  let authToken, bookingId, bookingData;
+  await test.step('Login and get token', async () => {
 
-  // Create a token (authentication)
-  const authResponse = await request.post('https://restful-booker.herokuapp.com/auth', {
-    data: authData,
-    headers: {
-      'Content-Type': 'application/json'
-    }
+    const authData = await restfullBookerPaylods.authPayload();
+    const authResponse = await commonFunctions.login(authData);
+
+    expect(authResponse.ok()).toBeTruthy();
+    const { token } = await authResponse.json();
+    authToken = token;
   });
 
-  expect(authResponse.ok()).toBeTruthy();
-  const { token } = await authResponse.json();
+  await test.step('Create a booking', async () => {
+    bookingData = await restfullBookerPaylods.bookingPayload();
+    const bookingResponse = await commonFunctions.createBooking(bookingData);
 
-  // Create a booking
-  const bookingResponse = await request.post('https://restful-booker.herokuapp.com/booking', {
-    data: bookingData,
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    }
+    expect(bookingResponse.ok()).toBeTruthy();
+    const { bookingid } = await bookingResponse.json();
+    bookingId = bookingid;
   });
 
-  expect(bookingResponse.ok()).toBeTruthy();
-  const { bookingid } = await bookingResponse.json();
+  await test.step('Update the booking details', async () => {
+    const updatedBookingData = await restfullBookerPaylods.updateBookingPayload();
+    const updateResponse = await commonFunctions.updateBooking(bookingId, updatedBookingData, authToken);
+    const body = await updateResponse.json();
 
-  // Update booking detail
-  const updateResponse = await request.patch(`https://restful-booker.herokuapp.com/booking/${bookingid}`, {
-    data: updatedBookingData,
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      Cookie: `token=${token}`
-    }
+    expect(updateResponse.status()).toBe(200);
+    expect(body).toEqual(updatedBookingData);
   });
-
-  expect(updateResponse.status()).toBe(200);
-  const body = await updateResponse.json();
-  expect(body).toEqual(updatedBookingData);
 });

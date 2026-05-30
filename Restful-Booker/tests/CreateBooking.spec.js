@@ -1,23 +1,21 @@
-const { test, expect } = require('@playwright/test');
-const fs = require('fs');
-const path = require('path');
-
-function loadTestData(filename) {
-  return JSON.parse(fs.readFileSync(path.join(__dirname, '../test-data', filename), 'utf8'));
-}
+import { test, expect } from '@playwright/test';
+import fs from 'fs';
+import path from 'path';
+import commonFunctions from '../functions/common';
+import restfullBookerPaylods from '../test-data/payload-generator';
 
 test('should create a booking and receive booking details back', async ({ request }) => {
-    const bookingData = loadTestData('booking.json');
-    const response = await request.post('https://restful-booker.herokuapp.com/booking', {
-      data: bookingData,
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      }
-    });
-    expect(response.status()).toBe(200);
+
+  await test.step('Generate booking payload', async () => {
+
+    const bookingData = await restfullBookerPaylods.bookingPayload();
+    const response = await commonFunctions.createBooking(bookingData);
     const body = await response.json();
+    
+    expect(response.status()).toBe(200);
     expect(body).toHaveProperty('bookingid');
     expect(body).toHaveProperty('booking');
     expect(body.booking).toEqual(bookingData);
-  });                                  
+  });
+    
+});                                  

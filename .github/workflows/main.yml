@@ -35,7 +35,7 @@ jobs:
         if: github.event_name == 'push' || github.event.inputs.project == 'restful-booker'
         working-directory: ./Restful-Booker
         run: |
-          npm ci
+          npm ci --include=dev
           npx playwright install --with-deps
 
       - name: Run Playwright tests for Restful Booker
@@ -67,7 +67,7 @@ jobs:
         if: github.event_name == 'push' || github.event.inputs.project == 'k6-restful-booker'
         working-directory: ./K6-Restful-Booker
         run: |
-          npm ci
+          npm ci --include=dev
 
       - name: Run K6 tests for K6 Restful Booker
         if: github.event_name == 'push' || github.event.inputs.project == 'k6-restful-booker'
@@ -91,7 +91,7 @@ jobs:
         if: github.event_name == 'push' || github.event.inputs.project == 'sauce-demo'
         working-directory: ./Sauce-Demo
         run: |
-          npm ci
+          npm ci --include=dev
           npx playwright install --with-deps
 
       - name: Run Playwright tests for Sauce Demo

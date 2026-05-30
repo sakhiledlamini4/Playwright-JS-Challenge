@@ -83,7 +83,7 @@ jobs:
           name: k6-summary-report
           path: |
             ./K6-Restful-Booker/summary.json
-            ./K6-Restful-Booker/summary.html
+            ./K6-Restful-Booker/k6-report/report.html
           retention-days: 30
 
       # Sauce-Demo setup and test run

@@ -4,3 +4,4 @@ node_modules/
 # k6 report output
 summary.json
 summary.html
+k6-report/

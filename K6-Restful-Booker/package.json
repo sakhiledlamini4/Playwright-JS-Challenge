@@ -4,7 +4,7 @@
     "name": "k6-restful-booker",
     "scripts": {
         "perf": "k6 run ./k6-tests/booker.js --summary-export=summary.json",
-        "report": "k6-html-reporter -i summary.json -o summary.html"
+        "report": "node ./scripts/k6-html-report.js summary.json k6-report"
     },
     "devDependencies": {
         "k6-html-reporter": "^1.0.5"

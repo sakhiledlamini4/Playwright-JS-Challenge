@@ -47,7 +47,7 @@ jobs:
       
       - name: Upload Playwright Reports
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: playwright-reports
           path: reports/
@@ -72,7 +72,7 @@ jobs:
       
       - name: Upload k6 Reports
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: k6-reports
           path: reports/
@@ -97,7 +97,7 @@ jobs:
       
       - name: Upload k6 Load Test Results
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: k6-load-reports
           path: reports/
@@ -174,7 +174,7 @@ jobs:
           EOF
       
       - name: Upload test reports
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: all-reports
           path: |

@@ -1,0 +1,30 @@
+{
+  "name": "performance-engineering-framework",
+  "version": "1.0.0",
+  "description": "Production-grade performance engineering framework combining Playwright UI/API testing with k6 performance testing",
+  "private": true,
+  "scripts": {
+    "install:all": "npm install && cd playwright/restful-booker && npm install && cd ../sauce-demo && npm install && cd ../..",
+    "playwright:test": "cd playwright/restful-booker && npm test",
+    "playwright:test:headed": "cd playwright/restful-booker && npm run test:headed",
+    "playwright:report": "cd playwright/restful-booker && npm run test:report",
+    "sauce:test": "cd playwright/sauce-demo && npm test",
+    "k6:smoke": "k6 run ./k6/smoke/smoke.js",
+    "k6:load": "k6 run ./k6/load/load.js",
+    "k6:stress": "k6 run ./k6/stress/stress.js",
+    "k6:spike": "k6 run ./k6/spike/spike.js",
+    "k6:soak": "k6 run ./k6/soak/soak.js",
+    "test": "npm run playwright:test && npm run k6:smoke",
+    "test:perf": "npm run k6:load",
+    "lint": "eslint . --ext .js --ignore-pattern node_modules",
+    "format": "prettier --write ."
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^8.0.0",
+    "prettier": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

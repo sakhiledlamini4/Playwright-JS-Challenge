@@ -1,0 +1,21 @@
+{
+  "name": "restful-booker-api-tests",
+  "version": "1.0.0",
+  "description": "API tests for Restful Booker using Playwright",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:headed": "npx playwright test --headed",
+    "test:report": "npx playwright show-report"
+  },
+  "keywords": ["playwright", "api", "testing", "restful-booker"],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@playwright/test": "^1.54.1"
+  },
+  "devDependencies": {
+    "monocart-reporter": "^2.9.21"
+  }
+}

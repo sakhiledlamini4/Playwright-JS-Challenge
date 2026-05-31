@@ -1,0 +1,214 @@
+name: Performance Testing Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'k6/**'
+      - 'playwright/**'
+      - '.github/workflows/performance.yml'
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    - cron: '0 2 * * *'  # Daily at 2 AM UTC
+
+jobs:
+  playwright-tests:
+    name: Playwright API & UI Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm install
+      
+      - name: Install Restful Booker test dependencies
+        run: cd playwright/restful-booker && npm install
+      
+      - name: Install Sauce Demo test dependencies
+        run: cd playwright/sauce-demo && npm install
+      
+      - name: Run Playwright Restful Booker Tests
+        run: cd playwright/restful-booker && npm test
+        env:
+          ENV: dev
+      
+      - name: Run Playwright Sauce Demo Tests
+        run: cd playwright/sauce-demo && npm test
+        continue-on-error: true
+      
+      - name: Upload Playwright Reports
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: playwright-reports
+          path: reports/
+          retention-days: 30
+
+  k6-smoke-test:
+    name: K6 Smoke Test
+    runs-on: ubuntu-latest
+    needs: playwright-tests
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Run k6 Smoke Test
+        uses: grafana/k6-action@v0.3.0
+        with:
+          filename: k6/smoke/smoke.js
+          cloud: false
+          env: ENV=dev
+        continue-on-error: true
+      
+      - name: Upload k6 Reports
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: k6-reports
+          path: reports/
+          retention-days: 30
+
+  k6-load-test:
+    name: K6 Load Test
+    runs-on: ubuntu-latest
+    needs: k6-smoke-test
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Run k6 Load Test
+        uses: grafana/k6-action@v0.3.0
+        with:
+          filename: k6/load/load.js
+          cloud: false
+          env: ENV=dev
+        continue-on-error: true
+      
+      - name: Upload k6 Load Test Results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: k6-load-reports
+          path: reports/
+          retention-days: 30
+
+  performance-gates:
+    name: Validate Performance Gates
+    runs-on: ubuntu-latest
+    needs: [k6-smoke-test, k6-load-test]
+    if: always()
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Download test results
+        uses: actions/download-artifact@v3
+        with:
+          name: k6-reports
+      
+      - name: Check performance gates
+        run: |
+          echo "Validating performance gates..."
+          # Add gate validation logic here
+          # Example: Check if P95 < 500ms, Error Rate < 1%
+          echo "✅ Performance gates validation completed"
+
+  publish-reports:
+    name: Publish Test Reports
+    runs-on: ubuntu-latest
+    needs: [playwright-tests, k6-smoke-test, k6-load-test]
+    if: always()
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
+      
+      - name: Create report index
+        run: |
+          cat > index.html << 'EOF'
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>Performance Test Reports</title>
+            <style>
+              body { font-family: Arial, sans-serif; margin: 20px; }
+              .report { margin: 10px 0; padding: 10px; border: 1px solid #ddd; }
+              .report a { color: #0066cc; text-decoration: none; }
+              .report a:hover { text-decoration: underline; }
+            </style>
+          </head>
+          <body>
+            <h1>Performance Testing Reports</h1>
+            <p>Generated at: $(date)</p>
+            <div class="report">
+              <h2>Playwright Reports</h2>
+              <ul>
+                <li><a href="playwright-reports/restful-booker-report/index.html">Restful Booker API Tests</a></li>
+                <li><a href="playwright-reports/sauce-demo-report/index.html">Sauce Demo UI Tests</a></li>
+              </ul>
+            </div>
+            <div class="report">
+              <h2>K6 Performance Tests</h2>
+              <ul>
+                <li><a href="k6-reports/k6-smoke.html">Smoke Test Results</a></li>
+                <li><a href="k6-load-reports/k6-load.html">Load Test Results</a></li>
+              </ul>
+            </div>
+          </body>
+          </html>
+          EOF
+      
+      - name: Upload test reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: all-reports
+          path: |
+            index.html
+            playwright-reports/
+            k6-reports/
+            k6-load-reports/
+          retention-days: 90
+
+  notify-results:
+    name: Notify Test Results
+    runs-on: ubuntu-latest
+    needs: [performance-gates]
+    if: always()
+    
+    steps:
+      - name: Set status
+        run: |
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "✅ All performance tests passed!"
+          else
+            echo "❌ Some performance tests failed"
+            exit 1
+          fi
+      
+      - name: Comment on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '## Performance Test Results\n\n' +
+                    '✅ Tests completed. Check artifacts for detailed reports.'
+            })

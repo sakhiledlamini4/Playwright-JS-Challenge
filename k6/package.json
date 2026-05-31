@@ -1,0 +1,22 @@
+{
+  "type": "module",
+  "name": "k6-performance-tests",
+  "version": "1.0.0",
+  "description": "Production-grade k6 performance testing framework",
+  "scripts": {
+    "k6:smoke": "k6 run ./smoke/smoke.js",
+    "k6:load": "k6 run ./load/load.js",
+    "k6:stress": "k6 run ./stress/stress.js",
+    "k6:spike": "k6 run ./spike/spike.js",
+    "k6:soak": "k6 run ./soak/soak.js",
+    "k6:smoke:dev": "k6 run ./smoke/smoke.js --env ENV=dev",
+    "k6:load:dev": "k6 run ./load/load.js --env ENV=dev",
+    "k6:stress:dev": "k6 run ./stress/stress.js --env ENV=dev",
+    "k6:spike:dev": "k6 run ./spike/spike.js --env ENV=dev",
+    "k6:soak:dev": "k6 run ./soak/soak.js --env ENV=dev"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^8.3.1"
+  },
+  "devDependencies": {}
+}

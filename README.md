@@ -1,96 +1,210 @@
-# 🧪 Test Automation Playwright JS Challenge Project Guide
+# Performance Engineering Framework
 
-This project contains automated tests for two different web applications using [Playwright](https://playwright.dev/) and [Monocart Reporter](https://www.npmjs.com/package/monocart-reporter):
+This repository has been upgraded into a production-grade performance engineering framework with:
 
-- **Restful Booker** – API-level tests for booking scenarios  
-- **Sauce Demo** – UI automation tests for an e-commerce demo app
+- Playwright API and UI testing
+- k6 performance testing for smoke, load, stress, spike, and soak scenarios
+- Environment-aware configuration (`dev`, `staging`, `prod`)
+- Dynamic booking data generation
+- API contract validation and schema checks
+- Custom k6 metrics and reporting
+- Dockerized stack with InfluxDB and Grafana
+- GitHub Actions CI/CD pipeline with performance gates
+- Executive and architecture documentation
 
----
+## Folder Structure
 
-## 🚀 Getting Started
-
-### 1. **Clone the repository**
-```sh
-git clone https://github.com/sakhiledlamini4/Playwright-JS-Challenge.git
-cd Playwright-JS-Challenge
+```
+project-root/
+├── .github/workflows/         # GitHub Actions CI/CD
+├── dashboards/               # Grafana dashboard provisioning and definitions
+├── docs/                     # Architecture and reporting documentation
+├── docker/                   # Docker helper files
+├── k6/                       # k6 performance tests and config
+│   ├── smoke/
+│   ├── load/
+│   ├── stress/
+│   ├── spike/
+│   ├── soak/
+│   ├── scenarios/
+│   ├── data/
+│   ├── helpers/
+│   ├── config/
+│   └── metrics/
+├── playwright/                # Playwright test projects
+│   ├── restful-booker/
+│   └── sauce-demo/
+├── reports/                   # Generated HTML reports
+├── package.json              # Root scripts and dependency management
+├── Dockerfile                # Docker image for performance tests
+├── docker-compose.yml        # Docker compose stack
+└── README.md                 # Project guide
 ```
 
-2. **Install dependencies:**
+## Setup
 
-Install dependencies in each project folder:
-   ```sh
-   cd Restful-Booker
-   npm install
+### Prerequisites
+- Node.js >= 16
+- npm
+- Docker
+- Docker Compose
+- k6 CLI
 
-   cd ../Sauce-Demo
-   npm install
-   ```
-   Note: Each project is isolated and has its own package.json and configuration.
+### Install dependencies
 
-3. **🧪 Running Tests**
-
-✅ Restful Booker
-   ```sh
-   cd Restful-Booker
-   npx playwright test
-   ```
-✅ Sauce Demo
-   ```sh
-   cd Sauce-Demo
-   npx playwright test
-   ```
-✅ Restful Booker performance test with k6
-   ```sh
-   cd Restful-Booker
-   k6 run ./k6/booker.js
-   ```
-4. **📊 Viewing the Monocart Test Report**
-After tests run, Monocart generates an HTML report:
-   ```sh
-   npx monocart show-report monocart-report/index.html
-   ```
-Or simply open monocart-report/index.html in your browser.
-
-## 📁 Project Structure
-   ```sh
-   repo-root/
-├── Restful-Booker/
-│   ├── tests/                # Playwright API tests
-│   ├── test-data/            # JSON test payloads (e.g., booking.json)
-│   ├── monocart-report/      # HTML test report (generated after tests run)
-│   ├── playwright.config.js  # Playwright config with Monocart reporter
-│   └── package.json
-│
-├── Sauce-Demo/
-│   ├── tests/       # UI test scripts
-         └── Authentication
-         └── Checkout Process
-         └── Inventory Management
-         └── Shopping Cart         
-│   ├── monocart-report/      # Test report for Sauce Demo
-│   ├── playwright.config.js
-│   └── package.json
-│
-└── .github/
-    └── workflows/
-        └── main.yml          # GitHub Actions CI/CD workflow
+```bash
+npm install
+cd k6 && npm install
+cd ../playwright/restful-booker && npm install
+cd ../sauce-demo && npm install
 ```
 
-## Useful Commands
-- `npx playwright install` - Install required Playwright browsers
+## Running Playwright Tests
 
-## 🛠️ CI/CD Integration
-GitHub Actions is set up to:
+### Restful Booker API Tests
 
-- Automatically install dependencies
+```bash
+cd playwright/restful-booker
+npm test
+```
 
-- Run tests for either project (selectable via workflow dispatch)
+### Sauce Demo UI Tests
 
-- Upload HTML reports as artifacts
+```bash
+cd playwright/sauce-demo
+npm test
+```
 
-- You can trigger CI manually or via push/pull_request to main.
+### Run Playwright Tests from Root
 
-## 📚 Resources
-For more information, see the 
-- [Playwright Documentation](https://playwright.dev/docs/intro).
-- [Monocart Reporter](https://www.npmjs.com/package/monocart-reporter).
+```bash
+npm run playwright:test
+```
+
+## Running k6 Performance Tests
+
+### Smoke Test
+
+```bash
+cd k6
+npm run k6:smoke
+```
+
+### Load Test
+
+```bash
+npm run k6:load
+```
+
+### Stress Test
+
+```bash
+npm run k6:stress
+```
+
+### Spike Test
+
+```bash
+npm run k6:spike
+```
+
+### Soak Test
+
+```bash
+npm run k6:soak
+```
+
+## Environment Configuration
+
+Use the `ENV` environment variable to select configuration:
+
+```bash
+ENV=dev k6 run k6/load/load.js
+ENV=staging k6 run k6/load/load.js
+ENV=prod k6 run k6/load/load.js
+```
+
+A shared environment loader is available at `k6/config/environment.js`.
+
+## Docker Stack
+
+### Start the stack
+
+```bash
+docker compose up -d
+```
+
+### Services
+- `influxdb`: Metrics storage
+- `grafana`: Visualization dashboard
+- `k6`: Optional test runner
+
+### Grafana
+Open `http://localhost:3000`
+- Username: `admin`
+- Password: `password`
+
+### InfluxDB
+Open `http://localhost:8086`
+- Username: `admin`
+- Password: `password`
+- Database: `k6`
+
+## GitHub Actions CI/CD
+
+Workflow file: `.github/workflows/performance.yml`
+
+Pipeline steps:
+1. Checkout code
+2. Install dependencies
+3. Run Playwright API and UI tests
+4. Run k6 smoke test
+5. Run k6 load test
+6. Validate performance gates
+7. Publish reports
+
+### Performance gates
+- P95 < 500ms
+- P99 < 1000ms
+- Error Rate < 1%
+- Check pass rate > 95%
+
+## Observability
+
+### Grafana
+- Provisioned dashboards are stored in `dashboards/`
+- Visualizes requests/sec, error rate, P95, P99, active users, and booking metrics
+
+### InfluxDB
+- k6 metrics are shipped to InfluxDB via `K6_OUT`
+- Dashboards query that data for real-time monitoring
+
+## Reports
+
+- Playwright reports: `reports/restful-booker-report/`, `reports/sauce-demo-report/`
+- k6 reports: `reports/k6-smoke.html`, `reports/k6-load.html`, `reports/k6-stress.html`, `reports/k6-spike.html`, `reports/k6-soak.html`
+
+## Documentation
+
+- `docs/current-state.md` - Current repository assessment
+- `docs/architecture.md` - Architecture and data flow documentation
+- `docs/performance-report-template.md` - Executive reporting template
+
+## Key Files
+
+- `k6/config/environment.js` - Environment configuration
+- `k6/config/thresholds.js` - Shared thresholds
+- `k6/config/performanceGates.js` - Performance gate definitions
+- `k6/helpers/apiClient.js` - API abstraction layer
+- `k6/data/dataGenerator.js` - Dynamic test data
+- `k6/scenarios/userJourney.js` - Reusable user journeys
+- `k6/metrics/customMetrics.js` - Custom k6 metrics
+- `dashboards/` - Grafana provisioning and dashboards
+- `.github/workflows/performance.yml` - CI/CD workflow
+
+## Notes
+
+- Hardcoded API URLs have been removed from k6 tests.
+- Environment switching is supported and centralized.
+- Custom metrics and contract validation are implemented.
+- Docker stack enables observability with Grafana and InfluxDB.

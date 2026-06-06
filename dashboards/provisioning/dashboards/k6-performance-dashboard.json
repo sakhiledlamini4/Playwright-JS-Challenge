@@ -1,5 +1,4 @@
 {
-  "dashboard": {
     "id": null,
     "uid": "k6-performance",
     "title": "K6 Performance Test Results",
@@ -147,6 +146,5 @@
         ]
       }
     ]
-  },
-  "overwrite": true
+  }
 }

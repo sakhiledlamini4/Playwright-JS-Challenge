@@ -1,4 +1,4 @@
-name: Performance Testing Pipeline
+name: Playwright & K6 Performance Testing Pipeline
 
 on:
   push:
